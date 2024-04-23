@@ -9,7 +9,7 @@ import {
   Tabs,
   Text,
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { CiLink } from 'react-icons/ci';
 import { FaLink } from 'react-icons/fa6';
 import { CgProfile } from 'react-icons/cg';
@@ -22,9 +22,29 @@ const Header = () => {
   const location = useLocation();
   const path = location.pathname.includes('preview');
 
+  let defaultTabIndex = 0;
+  if (location.pathname.includes('profile')) {
+    defaultTabIndex = 1;
+  } else if (location.pathname === '/') {
+    defaultTabIndex = 0;
+  }
+
+  const [tabIndex, setTabIndex] = useState(defaultTabIndex);
+
+  useEffect(() => {
+    if (location.pathname.includes('profile')) {
+      return setTabIndex(1);
+    }
+
+    return setTabIndex(0); // set to 3 to unselect all
+  }, [location]);
+
+  const handleTabsChange = (index) => {
+    setTabIndex(index);
+  };
   return (
     <>
-      <Flex flexDir='column' h='100vh' width='100vw' bg='#dff7ff' p='24px 44px'>
+      <Flex flexDir='column' h='100vh' width='100vw' p='24px 44px'>
         {path ? (
           <Flex
             alignItems='center'
@@ -67,7 +87,7 @@ const Header = () => {
               </Text>
             </Flex>
 
-            <Tabs>
+            <Tabs onChange={handleTabsChange} index={tabIndex}>
               <Flex gap='8px' color='#737373'>
                 <NavLink to='/'>
                   <Tab
@@ -125,18 +145,32 @@ const Header = () => {
           </Flex>
         )}
 
-        <Grid templateColumns='repeat(10, 1fr)' alignItems='center' h='100%'>
-          <GridItem colSpan={path ? 10 : 4}>
-            <Flex alignItems='center' justifyContent='center'>
-              <Mobile />
-            </Flex>
-          </GridItem>
-          <GridItem colSpan={path ? 0 : 6} display={path ? 'none' : 'block'}>
-            <Flex alignItems='center' justifyContent='center'>
-              <Outlet />
-            </Flex>
-          </GridItem>
-        </Grid>
+        {path ? (
+          <Grid templateColumns='repeat(10, 1fr)' alignItems='center' h='100%'>
+            <GridItem colSpan='10'>
+              <Flex alignItems='center' justifyContent='center'>
+                <Mobile />
+              </Flex>
+            </GridItem>
+          </Grid>
+        ) : (
+          <Grid templateColumns='repeat(10, 1fr)' alignItems='center' h='100%'>
+            <GridItem
+              colSpan={{ base: 0, md: 4 }}
+              display={{ base: 'none', md: 'block' }}
+            >
+              <Flex alignItems='center' justifyContent='center'>
+                <Mobile />
+              </Flex>
+            </GridItem>
+
+            <GridItem colSpan={{ base: 10, md: 6 }}>
+              <Flex>
+                <Outlet />
+              </Flex>
+            </GridItem>
+          </Grid>
+        )}
       </Flex>
     </>
   );
