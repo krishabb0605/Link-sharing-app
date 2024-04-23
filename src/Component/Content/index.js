@@ -16,7 +16,7 @@ import { FaGithub } from 'react-icons/fa';
 import { FaYoutube } from 'react-icons/fa';
 import { FaLinkedin } from 'react-icons/fa';
 
-const data = [
+const dataValue = [
   {
     value: 'GitHub',
     label: 'GitHub',
@@ -36,6 +36,9 @@ const data = [
 
 const Content = () => {
   const [linkCount, setLinkCount] = useState([]);
+  const [allSocialMediaData, setAllSocialMedia] = useState([]);
+
+  const [data, setData] = useState(dataValue);
 
   const Option = (props) => (
     <components.Option {...props}>
@@ -49,13 +52,14 @@ const Content = () => {
   );
 
   const SingleValue = ({ children, ...props }) => {
-    const selectedCountry = data?.find((country) => country.label === children);
-
+    const selectedCountry = dataValue?.find(
+      (country) => country.label === children
+    );
     return (
       <components.SingleValue {...props}>
         <Flex alignItems='center' gap='20px'>
           <Icon
-            as={selectedCountry.icon}
+            as={selectedCountry?.icon}
             fontSize='20px'
             color='purchr.gray.light'
           />
@@ -69,16 +73,31 @@ const Content = () => {
   };
 
   const handleAddLink = () => {
-    const data = linkCount.length ? linkCount[linkCount.length - 1] : 0;
-    setLinkCount([...linkCount, data + 1]);
+    setLinkCount((prev) => [...prev, linkCount.length + 1]);
+    setAllSocialMedia((prev) => [...prev, { media: '', link: '' }]);
   };
 
   const handleRemove = (number) => {
-    const a = linkCount.indexOf(number);
+    setLinkCount((prev) => prev.filter((count) => count !== number));
+    setAllSocialMedia((prev) =>
+      prev.filter((_, index) => index !== number - 1)
+    );
+  };
 
-    const newLinkCount = linkCount.slice();
-    newLinkCount.splice(a, 1);
-    setLinkCount(newLinkCount);
+  const handleSocialMedia = (value, index) => {
+    setAllSocialMedia((prev) =>
+      prev.map((item, i) =>
+        i === index ? { ...item, media: value.value } : item
+      )
+    );
+    setData((prev) => prev.filter((item) => item.value !== value.value));
+  };
+
+  const handleLinkChange = (e, index) => {
+    const { value } = e.target;
+    setAllSocialMedia((prev) =>
+      prev.map((item, i) => (i === index ? { ...item, link: value } : item))
+    );
   };
 
   return (
@@ -120,7 +139,7 @@ const Content = () => {
           style={{ scrollbarWidth: 'thin' }}
         >
           {linkCount.map((number) => (
-            <Flex flexDir='column' gap='12px'>
+            <Flex flexDir='column' gap='12px' key={number}>
               <Flex alignItems='center' justifyContent='space-between'>
                 <Flex alignItems='center' gap='8px'>
                   <Icon as={TfiLineDouble} />
@@ -137,6 +156,7 @@ const Content = () => {
                 <Text>Platform</Text>
                 <ReactSelect
                   options={data}
+                  onChange={(e) => handleSocialMedia(e, number - 1)}
                   menuPlacement='auto'
                   styles={{
                     singleValue: (provided) => ({
@@ -170,7 +190,7 @@ const Content = () => {
                     }),
                     menu: (provided) => ({
                       ...provided,
-                      // position: 'relative',
+                      position: 'relative',
                       zIndex: '1',
                     }),
                   }}
@@ -187,7 +207,12 @@ const Content = () => {
                   <InputLeftElement pointerEvents='none'>
                     <Icon as={FaLink} />
                   </InputLeftElement>
-                  <Input type='tel' placeholder='Link' />
+                  <Input
+                    type='text'
+                    placeholder='Link'
+                    value={allSocialMediaData[number - 1]?.link || ''}
+                    onChange={(e) => handleLinkChange(e, number - 1)}
+                  />
                 </InputGroup>
               </Box>
             </Flex>
