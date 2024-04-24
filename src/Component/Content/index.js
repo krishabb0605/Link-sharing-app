@@ -17,6 +17,7 @@ import { FaYoutube } from 'react-icons/fa';
 import { FaLinkedin } from 'react-icons/fa';
 import { GlobalContext } from '../../context/global.context';
 import { useToast } from '@chakra-ui/react';
+import style from './index.module.css';
 
 const dataValue = [
   {
@@ -75,13 +76,21 @@ const Content = () => {
       </components.SingleValue>
     );
   };
+  console.log(linkCount);
   const handleAddLink = () => {
-    setLinkCount((prev) => [...prev, linkCount.length + 1]);
+    // setLinkCount((prev) => [...prev, linkCount.length + 1]);
+    const data = linkCount.length ? linkCount[linkCount.length - 1] : 0;
+    setLinkCount([...linkCount, data + 1]);
     setAllSocialMedia((prev) => [...prev, { media: '', link: '' }]);
   };
 
   const handleRemove = (number) => {
-    setLinkCount((prev) => prev.filter((count) => count !== number));
+    const a = linkCount.indexOf(number);
+
+    const newLinkCount = linkCount.slice();
+    newLinkCount.splice(a, 1);
+    setLinkCount(newLinkCount);
+
     setAllSocialMedia((prev) =>
       prev.filter((_, index) => index !== number - 1)
     );
@@ -125,7 +134,7 @@ const Content = () => {
   };
 
   return (
-    <Box color='#737373' width={{ base: '100%', sm: '80%' }}>
+    <Box color='#737373' width={{ base: '100%', lg: '80%' }}>
       <Box
         height={{
           base: 'calc(100vh - 200px)',
@@ -180,6 +189,7 @@ const Content = () => {
                 <Text>Platform</Text>
                 <ReactSelect
                   options={data}
+                  className={style.customCss}
                   onChange={(e) => handleSocialMedia(e, number - 1)}
                   menuPlacement='auto'
                   styles={{
@@ -261,6 +271,7 @@ const Content = () => {
           bg='#7750de'
           _hover={{ color: 'white' }}
           onClick={handleSave}
+          width={{ base: '100%', sm: '24%' }}
         >
           Save
         </Button>

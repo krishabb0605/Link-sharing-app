@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 import React, { useContext, useState } from 'react';
 import { GlobalContext } from '../../context/global.context';
+import { useToast } from '@chakra-ui/react';
 
 const Profile = () => {
   const [allProfileData, setAllProfileData] = useState({
@@ -21,6 +22,7 @@ const Profile = () => {
     email: '',
     image: '',
   });
+  const toast = useToast();
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -42,6 +44,12 @@ const Profile = () => {
       allProfileData.email !== '' &&
       allProfileData.image !== ''
     ) {
+      toast({
+        description: 'Your changes have been successfully saved !',
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+      });
       handleAllData(allProfileData);
       setAllProfileData({
         firstName: '',
@@ -49,11 +57,18 @@ const Profile = () => {
         email: '',
         image: '',
       });
+    } else {
+      toast({
+        description: 'Fill All Details.',
+        status: 'error',
+        duration: 1000,
+        isClosable: true,
+      });
     }
   };
 
   return (
-    <Box color='#737373' width='80%'>
+    <Box color='#737373' width={{ base: '100%', xl: '80%' }}>
       <Box
         height={{
           base: 'calc(100vh - 200px)',
@@ -68,78 +83,82 @@ const Profile = () => {
             Add your details to create a personal touch to your profile.
           </Text>
         </Box>
+        <Flex flexDir='column' mt='44px' gap='30px'>
+          <Flex
+            flexDir={{ base: 'column', lg: 'row' }}
+            alignItems={{ base: 'start', lg: 'center' }}
+            gap={{ sm: '12px', lg: '0px' }}
+          >
+            <Text minW='200px'>Profile picture</Text>
+            <input
+              type='file'
+              accept=' image/jpeg, image/png'
+              name='image'
+              id='file'
+              onChange={handleImageChange}
+            />
+          </Flex>
 
-        <TableContainer mt='44px'>
-          <Table variant='simple'>
-            <Thead>
-              <Tr>
-                <Td ps='0'>Profile picture</Td>
-                <Td>
-                  <input
-                    type='file'
-                    accept=' image/jpeg, image/png'
-                    name='image'
-                    id='file'
-                    onChange={handleImageChange}
-                  />
-                </Td>
-              </Tr>
-            </Thead>
-            <Tbody>
-              <Tr>
-                <Td ps='0'>First name</Td>
-                <Td>
-                  <Input
-                    type='text'
-                    borderColor='#d0d5dd'
-                    placeholder='Enter first name'
-                    value={allProfileData.firstName}
-                    onChange={(e) =>
-                      setAllProfileData((prev) => ({
-                        ...prev,
-                        firstName: e.target.value,
-                      }))
-                    }
-                  />
-                </Td>
-              </Tr>
-              <Tr>
-                <Td ps='0'>last name</Td>
-                <Td>
-                  <Input
-                    type='text'
-                    borderColor='#d0d5dd'
-                    placeholder='Enter last name'
-                    value={allProfileData.lastName}
-                    onChange={(e) =>
-                      setAllProfileData((prev) => ({
-                        ...prev,
-                        lastName: e.target.value,
-                      }))
-                    }
-                  />
-                </Td>
-              </Tr>
-              <Tr>
-                <Td ps='0'>Email</Td>
-                <Td>
-                  <Input
-                    type='email'
-                    borderColor='#d0d5dd'
-                    placeholder='Enter email'
-                    value={allProfileData.email}
-                    onChange={(e) =>
-                      setAllProfileData((prev) => ({
-                        ...prev,
-                        email: e.target.value,
-                      }))
-                    }
-                  />
-                </Td>
-              </Tr>
-            </Tbody>
-          </Table>
-        </TableContainer>
+          <Flex
+            flexDir={{ base: 'column', lg: 'row' }}
+            alignItems={{ base: 'start', lg: 'center' }}
+            gap={{ sm: '12px', lg: '0px' }}
+          >
+            <Text minW='200px'>First name</Text>
+            <Input
+              type='text'
+              borderColor='#d0d5dd'
+              placeholder='Enter first name'
+              value={allProfileData.firstName}
+              onChange={(e) =>
+                setAllProfileData((prev) => ({
+                  ...prev,
+                  firstName: e.target.value,
+                }))
+              }
+            />
+          </Flex>
+
+          <Flex
+            flexDir={{ base: 'column', lg: 'row' }}
+            alignItems={{ base: 'start', lg: 'center' }}
+            gap={{ sm: '12px', lg: '0px' }}
+          >
+            <Text minW='200px'>Last name</Text>
+            <Input
+              type='text'
+              borderColor='#d0d5dd'
+              placeholder='Enter last name'
+              value={allProfileData.lastName}
+              onChange={(e) =>
+                setAllProfileData((prev) => ({
+                  ...prev,
+                  lastName: e.target.value,
+                }))
+              }
+            />
+          </Flex>
+
+          <Flex
+            flexDir={{ base: 'column', lg: 'row' }}
+            alignItems={{ base: 'start', lg: 'center' }}
+            gap={{ sm: '12px', lg: '0px' }}
+          >
+            <Text minW='200px'>Email</Text>
+            <Input
+              type='email'
+              borderColor='#d0d5dd'
+              placeholder='Enter email'
+              value={allProfileData.email}
+              onChange={(e) =>
+                setAllProfileData((prev) => ({
+                  ...prev,
+                  email: e.target.value,
+                }))
+              }
+            />
+          </Flex>
+        </Flex>
       </Box>
 
       <Flex

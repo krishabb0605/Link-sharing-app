@@ -44,30 +44,45 @@ const Header = () => {
   };
   return (
     <>
-      <Flex flexDir='column' h='100vh' width='100vw' p='24px 44px'>
+      <Flex
+        flexDir='column'
+        h='100vh'
+        width='100vw'
+        pos='relative'
+        p={path ? '0px' : '24px 44px'}
+      >
         {path ? (
-          <Flex
-            alignItems='center'
-            justifyContent='space-between'
-            bg='white'
-            p='8px'
+          <Box
+            backgroundColor='#7750de'
+            p='16px 16px 0 16px'
+            h='50vh'
+            borderBottomLeftRadius='40px'
+            borderBottomRightRadius='40px'
           >
-            <NavLink to='/'>
-              <Button border='1px solid #7750de' color='#7750de'>
-                Back to Editor
-              </Button>
-            </NavLink>
-            <NavLink to='/'>
-              <Button
-                border='1px solid #7750de'
-                color='white'
-                bg='#7750de'
-                _hover={{ color: 'white' }}
-              >
-                Share Link
-              </Button>
-            </NavLink>
-          </Flex>
+            <Flex
+              alignItems='center'
+              justifyContent='space-between'
+              bg='white'
+              p='8px'
+              borderRadius='8px'
+            >
+              <NavLink to='/'>
+                <Button border='1px solid #7750de' color='#7750de'>
+                  Back to Editor
+                </Button>
+              </NavLink>
+              <NavLink to='/'>
+                <Button
+                  border='1px solid #7750de'
+                  color='white'
+                  bg='#7750de'
+                  _hover={{ color: 'white' }}
+                >
+                  Share Link
+                </Button>
+              </NavLink>
+            </Flex>
+          </Box>
         ) : (
           <Flex
             alignItems='center'
@@ -148,7 +163,15 @@ const Header = () => {
         )}
 
         {path ? (
-          <Grid templateColumns='repeat(10, 1fr)' alignItems='center' h='100%'>
+          <Grid
+            templateColumns='repeat(10, 1fr)'
+            alignItems='center'
+            h='100%'
+            pos={path ? 'absolute' : 'relative'}
+            left='50%'
+            top='50%'
+            transform=' translate(-50%, -50%)'
+          >
             <GridItem colSpan='10'>
               <Flex alignItems='center' justifyContent='center'>
                 <Mobile />
@@ -158,15 +181,15 @@ const Header = () => {
         ) : (
           <Grid templateColumns='repeat(10, 1fr)' alignItems='center' h='100%'>
             <GridItem
-              colSpan={{ base: 0, md: 4 }}
-              display={{ base: 'none', md: 'block' }}
+              colSpan={{ base: 0, lg: 4 }}
+              display={{ base: 'none', lg: 'block' }}
             >
               <Flex alignItems='center' justifyContent='center'>
                 <Mobile />
               </Flex>
             </GridItem>
 
-            <GridItem colSpan={{ base: 10, md: 6 }}>
+            <GridItem colSpan={{ base: 10, lg: 6 }}>
               <Flex>
                 <Outlet />
               </Flex>
