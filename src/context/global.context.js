@@ -3,10 +3,12 @@ import React, { createContext, useState } from 'react';
 export const GlobalContext = createContext();
 
 const GlobalContextProvider = (props) => {
-  const [allData, setAllData] = useState();
+  const [allData, setAllData] = useState({ linkData: '', profileData: '' });
 
-  const handleAllData = (data) => {
-    setAllData((prev) => ({ ...prev, data }));
+  const handleAllData = (data, flag) => {
+    flag
+      ? setAllData((prev) => ({ ...prev, linkData: data }))
+      : setAllData((prev) => ({ ...prev, profileData: data }));
   };
   return (
     <GlobalContext.Provider

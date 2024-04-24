@@ -8,13 +8,15 @@ import {
   InputLeftElement,
   Text,
 } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { FaLink, FaPlus } from 'react-icons/fa';
-import { TfiLineDouble } from 'react-icons/tfi';
+import { IoMenu } from 'react-icons/io5';
 import ReactSelect, { components } from 'react-select';
 import { FaGithub } from 'react-icons/fa';
 import { FaYoutube } from 'react-icons/fa';
 import { FaLinkedin } from 'react-icons/fa';
+import { GlobalContext } from '../../context/global.context';
+import { useToast } from '@chakra-ui/react';
 
 const dataValue = [
   {
@@ -37,6 +39,8 @@ const dataValue = [
 const Content = () => {
   const [linkCount, setLinkCount] = useState([]);
   const [allSocialMediaData, setAllSocialMedia] = useState([]);
+  const { handleAllData } = useContext(GlobalContext);
+  const toast = useToast();
 
   const [data, setData] = useState(dataValue);
 
@@ -71,7 +75,6 @@ const Content = () => {
       </components.SingleValue>
     );
   };
-
   const handleAddLink = () => {
     setLinkCount((prev) => [...prev, linkCount.length + 1]);
     setAllSocialMedia((prev) => [...prev, { media: '', link: '' }]);
@@ -87,7 +90,7 @@ const Content = () => {
   const handleSocialMedia = (value, index) => {
     setAllSocialMedia((prev) =>
       prev.map((item, i) =>
-        i === index ? { ...item, media: value.value } : item
+        i === index ? { ...item, media: value.value, icon: value.icon } : item
       )
     );
     setData((prev) => prev.filter((item) => item.value !== value.value));
@@ -98,6 +101,27 @@ const Content = () => {
     setAllSocialMedia((prev) =>
       prev.map((item, i) => (i === index ? { ...item, link: value } : item))
     );
+  };
+
+  const handleSave = () => {
+    if (
+      allSocialMediaData.every((data) => data.media !== '' && data.link !== '')
+    ) {
+      toast({
+        description: 'Your changes have been successfully saved !',
+        status: 'success',
+        duration: 1000,
+        isClosable: true,
+      });
+      handleAllData(allSocialMediaData, true);
+    } else {
+      toast({
+        description: 'Fill All Details.',
+        status: 'error',
+        duration: 1000,
+        isClosable: true,
+      });
+    }
   };
 
   return (
@@ -142,7 +166,7 @@ const Content = () => {
             <Flex flexDir='column' gap='12px' key={number}>
               <Flex alignItems='center' justifyContent='space-between'>
                 <Flex alignItems='center' gap='8px'>
-                  <Icon as={TfiLineDouble} />
+                  <Icon as={IoMenu} />
                   <Text fontWeight='700' lineHeight='normal'>
                     Link #{number}
                   </Text>
@@ -210,6 +234,11 @@ const Content = () => {
                   <Input
                     type='text'
                     placeholder='Link'
+                    _focusVisible={{
+                      boxShadow: 'none',
+                      borderColor: '#3182ce',
+                    }}
+                    _hover={{ borderColor: 'black' }}
                     value={allSocialMediaData[number - 1]?.link || ''}
                     onChange={(e) => handleLinkChange(e, number - 1)}
                   />
@@ -231,6 +260,7 @@ const Content = () => {
           color='white'
           bg='#7750de'
           _hover={{ color: 'white' }}
+          onClick={handleSave}
         >
           Save
         </Button>

@@ -102,6 +102,7 @@ const Header = () => {
                       <Text
                         lineHeight='normal'
                         display={{ base: 'none', sm: 'block' }}
+                        fontWeight='700'
                       >
                         Links
                       </Text>
@@ -122,6 +123,7 @@ const Header = () => {
                       <Text
                         lineHeight='normal'
                         display={{ base: 'none', sm: 'block' }}
+                        fontWeight='700'
                       >
                         Profile Details
                       </Text>

@@ -8,7 +8,6 @@ import {
   Tbody,
   Td,
   Text,
-  Th,
   Thead,
   Tr,
 } from '@chakra-ui/react';
@@ -47,7 +46,7 @@ const Profile = () => {
       setAllProfileData({
         firstName: '',
         lastName: '',
-        email: '',  
+        email: '',
         image: '',
       });
     }
