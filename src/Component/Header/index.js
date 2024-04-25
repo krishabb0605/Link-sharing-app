@@ -36,7 +36,7 @@ const Header = () => {
       return setTabIndex(1);
     }
 
-    return setTabIndex(0); // set to 3 to unselect all
+    return setTabIndex(0);
   }, [location]);
 
   const handleTabsChange = (index) => {

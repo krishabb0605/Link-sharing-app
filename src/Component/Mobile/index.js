@@ -1,4 +1,12 @@
-import { Box, Button, Flex, Icon, Image, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  Icon,
+  Image,
+  Text,
+  Tooltip,
+} from '@chakra-ui/react';
 import React, { useContext } from 'react';
 import mobileDesign from '../../assets/mobileDesign.png';
 import { GlobalContext } from '../../context/global.context';
@@ -10,6 +18,13 @@ const Mobile = () => {
   const { allData } = useContext(GlobalContext);
   const location = useLocation();
   const path = location.pathname.includes('preview');
+  // let ab = localStorage.getItem('allData');
+
+  let newAllLinkData = Array(4).fill('');
+  allData.linkData &&
+    allData.linkData.forEach((item, index) => {
+      newAllLinkData.splice(index, 1, item);
+    });
 
   return (
     <Flex
@@ -32,26 +47,59 @@ const Mobile = () => {
                 border={allData.profileData ? '4px solid #7750de' : 'none'}
               />
               {allData.profileData ? (
-                <Text fontWeight='700'>
-                  {allData.profileData.firstName} {allData.profileData.lastName}
-                </Text>
+                <Tooltip
+                  label={
+                    allData.profileData
+                      ? allData.profileData.firstName +
+                        ' ' +
+                        allData.profileData.lastName
+                      : ''
+                  }
+                  placement='right'
+                >
+                  <Text
+                    fontWeight='700'
+                    whiteSpace='nowrap'
+                    textOverflow='ellipsis'
+                    overflow='hidden'
+                    width={{ base: '140px', lg: '238px' }}
+                    textAlign='center'
+                  >
+                    {allData.profileData.firstName}{' '}
+                    {allData.profileData.lastName}
+                  </Text>
+                </Tooltip>
               ) : (
                 <Image
                   src={allData.profileData ? allData.profileData.image : gray}
                   alt='Preview'
-                  h='10px'
+                  h='16px'
                   w='100px'
                   mt='8px'
                   borderRadius='8px'
                 />
               )}
               {allData.profileData ? (
-                <Text color='#737373'>{allData.profileData.email}</Text>
+                <Tooltip
+                  label={allData.profileData ? allData.profileData.email : ''}
+                  placement='right'
+                >
+                  <Text
+                    color='#737373'
+                    width={{ base: '140px', lg: '238px' }}
+                    textAlign='center'
+                    whiteSpace='nowrap'
+                    textOverflow='ellipsis'
+                    overflow='hidden'
+                  >
+                    {allData.profileData.email}
+                  </Text>
+                </Tooltip>
               ) : (
                 <Image
                   src={allData.profileData ? allData.profileData.image : gray}
                   alt='Preview'
-                  h='10px'
+                  h='16px'
                   w='50px'
                   mt='8px'
                   borderRadius='8px'
@@ -60,32 +108,46 @@ const Mobile = () => {
             </Flex>
 
             <Flex mt='24px' gap='12px' flexDir='column'>
-              {allData.linkData &&
-                allData.linkData.map((item) => (
-                  <Button
-                    key={item.link}
-                    onClick={() => window.open(item.link, '_blank')}
-                    width={{ base: 'auto', sm: '220px' }}
-                    display='flex'
-                    justifyContent='space-between'
-                    alignItems='center'
-                    background={
-                      item.media.toLowerCase().includes('git')
+              {newAllLinkData.map((item, index) => (
+                <Button
+                  key={index}
+                  onClick={() =>
+                    window.open(item.link ? item.link : '', '_blank')
+                  }
+                  width={{ base: '124px', sm: '220px' }}
+                  background={
+                    item.media
+                      ? item.media.toLowerCase().includes('git')
                         ? 'black'
                         : item.media.toLowerCase().includes('you')
                         ? 'red'
+                        : item.media.toLowerCase().includes('telegram')
+                        ? '#24A1DE'
                         : '#3c5ef7'
-                    }
-                    color='white'
-                    variant='solid'
-                  >
-                    <Flex alignItems='center' gap='8px'>
-                      <Icon as={item.icon} />
-                      <Text>{item.media}</Text>
+                      : '#eeeeee'
+                  }
+                  _hover={{
+                    backgroundColor: item.media ? '#000000a1' : '#eeeeee',
+                  }}
+                  h={{ base: '24px', lg: '40px' }}
+                  color='white'
+                  variant='solid'
+                >
+                  {item.media && (
+                    <Flex
+                      justifyContent='space-between'
+                      alignItems='center'
+                      width='100%'
+                    >
+                      <Flex alignItems='center' gap='8px'>
+                        <Icon as={item.icon} />
+                        <Text>{item.media}</Text>
+                      </Flex>
+                      <Icon as={IoArrowForward} />
                     </Flex>
-                    <Icon as={IoArrowForward} />
-                  </Button>
-                ))}
+                  )}
+                </Button>
+              ))}
             </Flex>
           </Flex>
         )}

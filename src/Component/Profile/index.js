@@ -1,16 +1,4 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Input,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Text,
-  Thead,
-  Tr,
-} from '@chakra-ui/react';
+import { Box, Button, Flex, Input, Text } from '@chakra-ui/react';
 import React, { useContext, useState } from 'react';
 import { GlobalContext } from '../../context/global.context';
 import { useToast } from '@chakra-ui/react';
@@ -22,6 +10,7 @@ const Profile = () => {
     email: '',
     image: '',
   });
+
   const toast = useToast();
 
   const handleImageChange = (e) => {

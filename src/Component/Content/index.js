@@ -15,6 +15,7 @@ import ReactSelect, { components } from 'react-select';
 import { FaGithub } from 'react-icons/fa';
 import { FaYoutube } from 'react-icons/fa';
 import { FaLinkedin } from 'react-icons/fa';
+import { FaTelegram } from 'react-icons/fa';
 import { GlobalContext } from '../../context/global.context';
 import { useToast } from '@chakra-ui/react';
 import style from './index.module.css';
@@ -35,11 +36,16 @@ const dataValue = [
     label: 'LinkedIn',
     icon: FaLinkedin,
   },
+  {
+    value: 'Telegram',
+    label: 'Telegram',
+    icon: FaTelegram,
+  },
 ];
 
 const Content = () => {
   const [linkCount, setLinkCount] = useState([]);
-  const [allSocialMediaData, setAllSocialMedia] = useState([]);
+  const [allSocialMediaData, setAllSocialMediaData] = useState([]);
   const { handleAllData } = useContext(GlobalContext);
   const toast = useToast();
 
@@ -76,28 +82,23 @@ const Content = () => {
       </components.SingleValue>
     );
   };
-  console.log(linkCount);
+
   const handleAddLink = () => {
-    // setLinkCount((prev) => [...prev, linkCount.length + 1]);
     const data = linkCount.length ? linkCount[linkCount.length - 1] : 0;
     setLinkCount([...linkCount, data + 1]);
-    setAllSocialMedia((prev) => [...prev, { media: '', link: '' }]);
+    setAllSocialMediaData((prev) => [...prev, { media: '', link: '' }]);
   };
 
-  const handleRemove = (number) => {
-    const a = linkCount.indexOf(number);
-
+  const handleRemove = (index) => {
     const newLinkCount = linkCount.slice();
-    newLinkCount.splice(a, 1);
+    newLinkCount.splice(index, 1);
     setLinkCount(newLinkCount);
 
-    setAllSocialMedia((prev) =>
-      prev.filter((_, index) => index !== number - 1)
-    );
+    setAllSocialMediaData((prev) => prev.filter((item, i) => i !== index));
   };
 
   const handleSocialMedia = (value, index) => {
-    setAllSocialMedia((prev) =>
+    setAllSocialMediaData((prev) =>
       prev.map((item, i) =>
         i === index ? { ...item, media: value.value, icon: value.icon } : item
       )
@@ -105,9 +106,8 @@ const Content = () => {
     setData((prev) => prev.filter((item) => item.value !== value.value));
   };
 
-  const handleLinkChange = (e, index) => {
-    const { value } = e.target;
-    setAllSocialMedia((prev) =>
+  const handleLinkChange = (value, index) => {
+    setAllSocialMediaData((prev) =>
       prev.map((item, i) => (i === index ? { ...item, link: value } : item))
     );
   };
@@ -171,7 +171,7 @@ const Content = () => {
           overflowY='auto'
           style={{ scrollbarWidth: 'thin' }}
         >
-          {linkCount.map((number) => (
+          {linkCount.map((number, index) => (
             <Flex flexDir='column' gap='12px' key={number}>
               <Flex alignItems='center' justifyContent='space-between'>
                 <Flex alignItems='center' gap='8px'>
@@ -180,7 +180,7 @@ const Content = () => {
                     Link #{number}
                   </Text>
                 </Flex>
-                <Text onClick={() => handleRemove(number)} cursor='pointer'>
+                <Text onClick={() => handleRemove(index)} cursor='pointer'>
                   Remove
                 </Text>
               </Flex>
@@ -190,7 +190,7 @@ const Content = () => {
                 <ReactSelect
                   options={data}
                   className={style.customCss}
-                  onChange={(e) => handleSocialMedia(e, number - 1)}
+                  onChange={(e) => handleSocialMedia(e, index)}
                   menuPlacement='auto'
                   styles={{
                     singleValue: (provided) => ({
@@ -249,8 +249,8 @@ const Content = () => {
                       borderColor: '#3182ce',
                     }}
                     _hover={{ borderColor: 'black' }}
-                    value={allSocialMediaData[number - 1]?.link || ''}
-                    onChange={(e) => handleLinkChange(e, number - 1)}
+                    value={allSocialMediaData[index]?.link || ''}
+                    onChange={(e) => handleLinkChange(e.target.value, index)}
                   />
                 </InputGroup>
               </Box>
