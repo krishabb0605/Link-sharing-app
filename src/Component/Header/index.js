@@ -21,7 +21,7 @@ import Mobile from '../Mobile';
 const Header = () => {
   const location = useLocation();
   const path = location.pathname.includes('preview');
-
+localStorage.removeItem('linkData')
   let defaultTabIndex = 0;
   if (location.pathname.includes('profile')) {
     defaultTabIndex = 1;
@@ -101,7 +101,6 @@ const Header = () => {
                 devlinks
               </Text>
             </Flex>
-
             <Tabs onChange={handleTabsChange} index={tabIndex}>
               <Flex gap='8px' color='#737373'>
                 <NavLink to='/'>

@@ -13,13 +13,16 @@ import { GlobalContext } from '../../context/global.context';
 import { IoArrowForward } from 'react-icons/io5';
 import { useLocation } from 'react-router-dom';
 import gray from '../../assets/gray.png';
+import { FaGithub } from 'react-icons/fa';
+import { FaYoutube } from 'react-icons/fa';
+import { FaLinkedin } from 'react-icons/fa';
+import { FaTelegram } from 'react-icons/fa';
 
 const Mobile = () => {
   const { allData } = useContext(GlobalContext);
   const location = useLocation();
   const path = location.pathname.includes('preview');
-  // let ab = localStorage.getItem('allData');
-
+  console.log('allData', allData);
   let newAllLinkData = Array(4).fill('');
   allData.linkData &&
     allData.linkData.forEach((item, index) => {
@@ -140,7 +143,17 @@ const Mobile = () => {
                       width='100%'
                     >
                       <Flex alignItems='center' gap='8px'>
-                        <Icon as={item.icon} />
+                        <Icon
+                          as={
+                            item.icon.toLowerCase().includes('git')
+                              ? FaGithub
+                              : item.icon.toLowerCase().includes('you')
+                              ? FaYoutube
+                              : item.icon.toLowerCase().includes('telegram')
+                              ? FaTelegram
+                              : FaLinkedin
+                          }
+                        />
                         <Text>{item.media}</Text>
                       </Flex>
                       <Icon as={IoArrowForward} />

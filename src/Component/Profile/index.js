@@ -4,12 +4,21 @@ import { GlobalContext } from '../../context/global.context';
 import { useToast } from '@chakra-ui/react';
 
 const Profile = () => {
-  const [allProfileData, setAllProfileData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    image: '',
-  });
+  // const [allProfileData, setAllProfileData] = useState({
+  //   firstName: '',
+  //   lastName: '',
+  //   email: '',
+  //   image: '',
+  // });
+
+  const [allProfileData, setAllProfileData] = useState(
+    JSON.parse(localStorage.getItem('profileData')) || {
+      firstName: '',
+      lastName: '',
+      email: '',
+      image: '',
+    }
+  );
 
   const toast = useToast();
 
@@ -40,6 +49,7 @@ const Profile = () => {
         isClosable: true,
       });
       handleAllData(allProfileData);
+      localStorage.setItem('profileData', JSON.stringify(allProfileData));
       setAllProfileData({
         firstName: '',
         lastName: '',

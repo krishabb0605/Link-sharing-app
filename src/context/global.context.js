@@ -1,18 +1,30 @@
-import React, { createContext, useState } from 'react';
+import { createContext, useState, useEffect } from 'react';
 
 export const GlobalContext = createContext();
 
 const GlobalContextProvider = (props) => {
-  const [allData, setAllData] = useState({ linkData: [], profileData: '' });
+  const [allData, setAllData] = useState({
+    linkData: [],
+    profileData: '',
+  });
+
+  useEffect(() => {
+    const storedData = localStorage.getItem('allData');
+    if (storedData) {
+      setAllData(JSON.parse(storedData));
+    }
+  }, []);
 
   const handleAllData = (data, flag) => {
+    console.log("data",data); 
     flag
       ? setAllData((prev) => ({ ...prev, linkData: data }))
       : setAllData((prev) => ({ ...prev, profileData: data }));
   };
-
-  localStorage.setItem('allData', JSON.stringify(allData));
-
+  
+  useEffect(() => {
+    localStorage.setItem('allData', JSON.stringify(allData));
+  }, [allData]);
   return (
     <GlobalContext.Provider
       value={{

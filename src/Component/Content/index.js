@@ -8,7 +8,7 @@ import {
   InputLeftElement,
   Text,
 } from '@chakra-ui/react';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { FaLink, FaPlus } from 'react-icons/fa';
 import { IoMenu } from 'react-icons/io5';
 import ReactSelect, { components } from 'react-select';
@@ -24,56 +24,89 @@ const dataValue = [
   {
     value: 'GitHub',
     label: 'GitHub',
-    icon: FaGithub,
+    icon: 'FaGithub',
   },
   {
     value: 'YouTube',
     label: 'YouTube',
-    icon: FaYoutube,
+    icon: 'FaYoutube',
   },
   {
     value: 'LinkedIn',
     label: 'LinkedIn',
-    icon: FaLinkedin,
+    icon: 'FaLinkedin',
   },
   {
     value: 'Telegram',
     label: 'Telegram',
-    icon: FaTelegram,
+    icon: 'FaTelegram',
   },
 ];
 
 const Content = () => {
-  const [linkCount, setLinkCount] = useState([]);
-  const [allSocialMediaData, setAllSocialMediaData] = useState([]);
+  const [linkCount, setLinkCount] = useState(
+    JSON.parse(localStorage.getItem('linkCountData')) || []
+  );
+  const [allSocialMediaData, setAllSocialMediaData] = useState(
+    JSON.parse(localStorage.getItem('linksData')) || []
+  );
   const { handleAllData } = useContext(GlobalContext);
   const toast = useToast();
 
-  const [data, setData] = useState(dataValue);
-
-  const Option = (props) => (
-    <components.Option {...props}>
-      <Flex alignItems='center' gap='8px'>
-        <Icon as={props.data.icon} fontSize='20px' />
-        <Text fontSize='16px' fontWeight='400' color='#1a202c'>
-          {props.data.label}
-        </Text>
-      </Flex>
-    </components.Option>
+  const [data, setData] = useState(
+    JSON.parse(localStorage.getItem('data')) || dataValue
   );
+
+  useEffect(() => {
+    localStorage.setItem('linkCountData', JSON.stringify(linkCount));
+    localStorage.setItem('linksData', JSON.stringify(allSocialMediaData));
+  }, [linkCount, allSocialMediaData]);
+
+  useEffect(() => {
+    const updatedDataValue = dataValue.filter(
+      (item) =>
+        !allSocialMediaData.map((data) => data.media).includes(item.value)
+    );
+    setData(updatedDataValue);
+    localStorage.setItem('data', JSON.stringify(updatedDataValue)); // Update local storage here
+  }, [allSocialMediaData]);
+
+  const Option = (props) => {
+    const icon = props.data.icon.toLowerCase().includes('git')
+      ? FaGithub
+      : props.data.icon.toLowerCase().includes('you')
+      ? FaYoutube
+      : props.data.icon.toLowerCase().includes('telegram')
+      ? FaTelegram
+      : FaLinkedin;
+
+    return (
+      <components.Option {...props}>
+        <Flex alignItems='center' gap='8px'>
+          <Icon as={icon} fontSize='20px' />
+          <Text fontSize='16px' fontWeight='400' color='#1a202c'>
+            {props.data.label}
+          </Text>
+        </Flex>
+      </components.Option>
+    );
+  };
 
   const SingleValue = ({ children, ...props }) => {
     const selectedCountry = dataValue?.find(
       (country) => country.label === children
     );
+    const icon = selectedCountry.icon.toLowerCase().includes('git')
+      ? FaGithub
+      : selectedCountry.icon.toLowerCase().includes('you')
+      ? FaYoutube
+      : selectedCountry.icon.toLowerCase().includes('telegram')
+      ? FaTelegram
+      : FaLinkedin;
     return (
       <components.SingleValue {...props}>
         <Flex alignItems='center' gap='20px'>
-          <Icon
-            as={selectedCountry?.icon}
-            fontSize='20px'
-            color='purchr.gray.light'
-          />
+          <Icon as={icon} fontSize='20px' color='purchr.gray.light' />
 
           <Text fontSize='14px' fontWeight='400' color='#1a202c'>
             {children}
@@ -86,7 +119,10 @@ const Content = () => {
   const handleAddLink = () => {
     const data = linkCount.length ? linkCount[linkCount.length - 1] : 0;
     setLinkCount([...linkCount, data + 1]);
-    setAllSocialMediaData((prev) => [...prev, { media: '', link: '' }]);
+    setAllSocialMediaData((prev) => [
+      ...prev,
+      { media: '', link: '', icon: '' },
+    ]);
   };
 
   const handleRemove = (index) => {
@@ -103,7 +139,7 @@ const Content = () => {
         i === index ? { ...item, media: value.value, icon: value.icon } : item
       )
     );
-    setData((prev) => prev.filter((item) => item.value !== value.value));
+    // setData((prev) => prev.filter((item) => item.value !== value.value));
   };
 
   const handleLinkChange = (value, index) => {
@@ -188,8 +224,12 @@ const Content = () => {
               <Box>
                 <Text>Platform</Text>
                 <ReactSelect
+                  isSearchable='false'
                   options={data}
                   className={style.customCss}
+                  value={data.find(
+                    (item) => item.value === allSocialMediaData[index]?.media
+                  )}
                   onChange={(e) => handleSocialMedia(e, index)}
                   menuPlacement='auto'
                   styles={{
