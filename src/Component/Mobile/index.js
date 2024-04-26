@@ -22,7 +22,7 @@ const Mobile = () => {
   const { allData } = useContext(GlobalContext);
   const location = useLocation();
   const path = location.pathname.includes('preview');
-  console.log('allData', allData);
+
   let newAllLinkData = Array(4).fill('');
   allData.linkData &&
     allData.linkData.forEach((item, index) => {
@@ -42,14 +42,19 @@ const Mobile = () => {
           <Flex alignItems='center' flexDir='column'>
             <Flex alignItems='center' flexDir='column'>
               <Image
-                src={allData.profileData ? allData.profileData.image : gray}
+                src={
+                  allData.profileData.image ? allData.profileData.image : gray
+                }
                 alt='Preview'
                 h='70px'
                 w='70px'
                 borderRadius='50%'
-                border={allData.profileData ? '4px solid #7750de' : 'none'}
+                border={
+                  allData.profileData.image ? '4px solid #7750de' : 'none'
+                }
               />
-              {allData.profileData ? (
+
+              {allData.profileData.firstName ? (
                 <Tooltip
                   label={
                     allData.profileData
@@ -74,7 +79,7 @@ const Mobile = () => {
                 </Tooltip>
               ) : (
                 <Image
-                  src={allData.profileData ? allData.profileData.image : gray}
+                  src={gray}
                   alt='Preview'
                   h='16px'
                   w='100px'
@@ -82,7 +87,8 @@ const Mobile = () => {
                   borderRadius='8px'
                 />
               )}
-              {allData.profileData ? (
+
+              {allData.profileData.email ? (
                 <Tooltip
                   label={allData.profileData ? allData.profileData.email : ''}
                   placement='right'
@@ -100,7 +106,7 @@ const Mobile = () => {
                 </Tooltip>
               ) : (
                 <Image
-                  src={allData.profileData ? allData.profileData.image : gray}
+                  src={gray}
                   alt='Preview'
                   h='16px'
                   w='50px'
@@ -114,6 +120,7 @@ const Mobile = () => {
               {newAllLinkData.map((item, index) => (
                 <Button
                   key={index}
+                  padding={{ base: '0px 4px', sm: '0px 16px' }}
                   onClick={() =>
                     window.open(item.link ? item.link : '', '_blank')
                   }
@@ -132,7 +139,7 @@ const Mobile = () => {
                   _hover={{
                     backgroundColor: item.media ? '#000000a1' : '#eeeeee',
                   }}
-                  h={{ base: '24px', lg: '40px' }}
+                  h={{ base: '24px', md: '40px' }}
                   color='white'
                   variant='solid'
                 >

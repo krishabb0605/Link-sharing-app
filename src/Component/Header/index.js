@@ -8,6 +8,7 @@ import {
   Tab,
   Tabs,
   Text,
+  useToast,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { CiLink } from 'react-icons/ci';
@@ -21,7 +22,8 @@ import Mobile from '../Mobile';
 const Header = () => {
   const location = useLocation();
   const path = location.pathname.includes('preview');
-localStorage.removeItem('linkData')
+  const toast = useToast();
+
   let defaultTabIndex = 0;
   if (location.pathname.includes('profile')) {
     defaultTabIndex = 1;
@@ -42,6 +44,46 @@ localStorage.removeItem('linkData')
   const handleTabsChange = (index) => {
     setTabIndex(index);
   };
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        const linksData = JSON.parse(localStorage.getItem('linksData'));
+        if (linksData.length) {
+          const shareText = (linksData || [])
+            .map((link) => `${link.media}: ${link.link}`)
+            .join('\n');
+
+          await navigator.share({
+            title: 'My Social Media Links',
+            text: shareText,
+          });
+        } else {
+          toast({
+            description: 'Link is not available !',
+            status: 'error',
+            duration: 1000,
+            isClosable: true,
+          });
+        }
+      } catch (error) {
+        toast({
+          description: 'Error while sharing !',
+          status: 'error',
+          duration: 1000,
+          isClosable: true,
+        });
+      }
+    } else {
+      toast({
+        description: 'Web Share API not supported !',
+        status: 'error',
+        duration: 1000,
+        isClosable: true,
+      });
+    }
+  };
+
   return (
     <>
       <Flex
@@ -77,6 +119,7 @@ localStorage.removeItem('linkData')
                   color='white'
                   bg='#7750de'
                   _hover={{ color: 'white' }}
+                  onClick={handleShare}
                 >
                   Share Link
                 </Button>

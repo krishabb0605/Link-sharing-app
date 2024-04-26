@@ -68,7 +68,7 @@ const Content = () => {
         !allSocialMediaData.map((data) => data.media).includes(item.value)
     );
     setData(updatedDataValue);
-    localStorage.setItem('data', JSON.stringify(updatedDataValue)); // Update local storage here
+    localStorage.setItem('data', JSON.stringify(updatedDataValue));
   }, [allSocialMediaData]);
 
   const Option = (props) => {
@@ -91,7 +91,6 @@ const Content = () => {
       </components.Option>
     );
   };
-
   const SingleValue = ({ children, ...props }) => {
     const selectedCountry = dataValue?.find(
       (country) => country.label === children
@@ -139,7 +138,6 @@ const Content = () => {
         i === index ? { ...item, media: value.value, icon: value.icon } : item
       )
     );
-    // setData((prev) => prev.filter((item) => item.value !== value.value));
   };
 
   const handleLinkChange = (value, index) => {
@@ -169,6 +167,12 @@ const Content = () => {
     }
   };
 
+  const handleReset = () => {
+    setLinkCount([]);
+    setAllSocialMediaData([]);
+    handleAllData([], true);
+  };
+
   return (
     <Box color='#737373' width={{ base: '100%', lg: '80%' }}>
       <Box
@@ -183,7 +187,7 @@ const Content = () => {
           </Text>
           <Text>
             Add/edit/remove links below and then share all your profiles with
-            the world !
+            the world!
           </Text>
         </Box>
 
@@ -227,7 +231,7 @@ const Content = () => {
                   isSearchable='false'
                   options={data}
                   className={style.customCss}
-                  value={data.find(
+                  value={dataValue.find(
                     (item) => item.value === allSocialMediaData[index]?.media
                   )}
                   onChange={(e) => handleSocialMedia(e, index)}
@@ -304,14 +308,25 @@ const Content = () => {
         borderTop='1px solid #bbbbbb'
         mt='8px'
         pt='8px'
+        gap='8px'
       >
         <Button
           border='1px solid #7750de'
           color='white'
           bg='#7750de'
-          _hover={{ color: 'white' }}
+          width='80px'
+          _hover={{ opacity: '0.8' }}
+          onClick={handleReset}
+        >
+          Reset
+        </Button>
+        <Button
+          border='1px solid #7750de'
+          color='white'
+          bg='#7750de'
+          width='80px'
+          _hover={{ opacity: '0.8' }}
           onClick={handleSave}
-          width={{ base: '100%', sm: '24%' }}
         >
           Save
         </Button>

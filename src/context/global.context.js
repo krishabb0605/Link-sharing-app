@@ -16,12 +16,11 @@ const GlobalContextProvider = (props) => {
   }, []);
 
   const handleAllData = (data, flag) => {
-    console.log("data",data); 
     flag
       ? setAllData((prev) => ({ ...prev, linkData: data }))
       : setAllData((prev) => ({ ...prev, profileData: data }));
   };
-  
+
   useEffect(() => {
     localStorage.setItem('allData', JSON.stringify(allData));
   }, [allData]);
