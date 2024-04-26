@@ -82,9 +82,9 @@ const Content = () => {
 
     return (
       <components.Option {...props}>
-        <Flex alignItems='center' gap='8px'>
+        <Flex alignItems='center' gap='16px' color='linkSharing.textColor'>
           <Icon as={icon} fontSize='20px' />
-          <Text fontSize='16px' fontWeight='400' color='#1a202c'>
+          <Text fontSize='16px' fontWeight='400'>
             {props.data.label}
           </Text>
         </Flex>
@@ -104,10 +104,10 @@ const Content = () => {
       : FaLinkedin;
     return (
       <components.SingleValue {...props}>
-        <Flex alignItems='center' gap='20px'>
-          <Icon as={icon} fontSize='20px' color='purchr.gray.light' />
+        <Flex alignItems='center' gap='16px' color='linkSharing.textColor'>
+          <Icon as={icon} fontSize='20px' />
 
-          <Text fontSize='14px' fontWeight='400' color='#1a202c'>
+          <Text fontSize='14px' fontWeight='400' lineHeight='normal'>
             {children}
           </Text>
         </Flex>
@@ -147,9 +147,31 @@ const Content = () => {
   };
 
   const handleSave = () => {
+    const linkRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+
+    const allLinksValid = allSocialMediaData.every((data) =>
+      linkRegex.test(data.link)
+    );
+
+    console.log(allLinksValid);
+
     if (
-      allSocialMediaData.every((data) => data.media !== '' && data.link !== '')
+      allSocialMediaData.every((data) => data.media === '' && data.link === '')
     ) {
+      toast({
+        description: 'Fill All Details.',
+        status: 'error',
+        duration: 1000,
+        isClosable: true,
+      });
+    } else if (!allLinksValid) {
+      toast({
+        description: 'Enter valid link.',
+        status: 'error',
+        duration: 1000,
+        isClosable: true,
+      });
+    } else {
       toast({
         description: 'Your changes have been successfully saved !',
         status: 'success',
@@ -157,13 +179,6 @@ const Content = () => {
         isClosable: true,
       });
       handleAllData(allSocialMediaData, true);
-    } else {
-      toast({
-        description: 'Fill All Details.',
-        status: 'error',
-        duration: 1000,
-        isClosable: true,
-      });
     }
   };
 
@@ -174,12 +189,13 @@ const Content = () => {
   };
 
   return (
-    <Box color='#737373' width={{ base: '100%', lg: '80%' }}>
+    <Box color='linkSharing.textColor' width={{ base: '100%', lg: '80%' }}>
       <Box
         height={{
           base: 'calc(100vh - 200px)',
           sm: 'calc(100vh - 300px)',
         }}
+        overflow='hidden'
       >
         <Box>
           <Text fontWeight='700' fontSize='30px' color='black'>
@@ -192,12 +208,13 @@ const Content = () => {
         </Box>
 
         <Button
-          border='1px solid #7750de'
+          border='1px solid '
+          borderColor='linkSharing.purple.bg'
           w='100%'
           mt='28px'
           onClick={handleAddLink}
         >
-          <Flex color='#7750de' gap='4px'>
+          <Flex color='linkSharing.purple.bg' gap='4px'>
             <Icon as={FaPlus} />
             <Text lineHeight='normal'>Add new link</Text>
           </Flex>
@@ -210,6 +227,7 @@ const Content = () => {
           maxH={{ base: 'calc(100vh - 420px)', sm: 'calc(100vh - 490px)' }}
           overflowY='auto'
           style={{ scrollbarWidth: 'thin' }}
+          padding='0px 8px'
         >
           {linkCount.map((number, index) => (
             <Flex flexDir='column' gap='12px' key={number}>
@@ -228,7 +246,7 @@ const Content = () => {
               <Box>
                 <Text>Platform</Text>
                 <ReactSelect
-                  isSearchable='false'
+                  isSearchable={false}
                   options={data}
                   className={style.customCss}
                   value={dataValue.find(
@@ -246,12 +264,10 @@ const Content = () => {
                       ...provided,
                       display: 'none',
                     }),
-                    option: (provided, state) => ({
+                    option: (provided) => ({
                       ...provided,
-                      color: '#1e2022',
-                      backgroundColor: state.isSelected ? '#e2e8ee' : 'white',
                       cursor: 'pointer',
-                      padding: '8px 0 8px 20px',
+                      padding: '8px 0 8px 8px',
                       margin: '4px 0',
                       borderRadius: '4px',
                       overflow: 'hidden',
@@ -260,7 +276,11 @@ const Content = () => {
                     control: (provided) => ({
                       ...provided,
                       borderRadius: '6px',
-                      borderColor: '#d0d5dd',
+                      borderColor: 'linkSharing.gray.dark',
+                      boxShadow: 'none',
+                      '&:hover': {
+                        borderColor: '#7750de',
+                      },
                     }),
                     menuList: (provided) => ({
                       ...provided,
@@ -281,7 +301,12 @@ const Content = () => {
 
               <Box>
                 <Text>Link</Text>
-                <InputGroup bg='white' borderRadius='8px' borderColor='#d0d5dd'>
+                <InputGroup
+                  bg='white'
+                  borderRadius='8px'
+                  borderColor='linkSharing.gray.dark'
+                  mb='4px'
+                >
                   <InputLeftElement pointerEvents='none'>
                     <Icon as={FaLink} />
                   </InputLeftElement>
@@ -289,10 +314,9 @@ const Content = () => {
                     type='text'
                     placeholder='Link'
                     _focusVisible={{
-                      boxShadow: 'none',
-                      borderColor: '#3182ce',
+                      boxShadow: '0px 0px 8px 0.5px #7750de',
                     }}
-                    _hover={{ borderColor: 'black' }}
+                    _hover={{ borderColor: 'linkSharing.purple.bg' }}
                     value={allSocialMediaData[index]?.link || ''}
                     onChange={(e) => handleLinkChange(e.target.value, index)}
                   />
@@ -305,26 +329,29 @@ const Content = () => {
       <Flex
         alignItems='center'
         justifyContent='end'
-        borderTop='1px solid #bbbbbb'
+        borderTop='1px solid'
+        borderColor='linkSharing.gray.dark'
         mt='8px'
         pt='8px'
         gap='8px'
       >
         <Button
-          border='1px solid #7750de'
+          border='1px solid'
+          borderColor='linkSharing.purple.bg'
           color='white'
-          bg='#7750de'
-          width='80px'
+          bg='linkSharing.purple.bg'
+          width={{ base: '50%', lg: '80px' }}
           _hover={{ opacity: '0.8' }}
           onClick={handleReset}
         >
           Reset
         </Button>
         <Button
-          border='1px solid #7750de'
+          border='1px solid '
+          borderColor='linkSharing.purple.bg'
           color='white'
-          bg='#7750de'
-          width='80px'
+          bg='linkSharing.purple.bg'
+          width={{ base: '50%', lg: '80px' }}
           _hover={{ opacity: '0.8' }}
           onClick={handleSave}
         >

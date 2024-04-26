@@ -12,7 +12,6 @@ import mobileDesign from '../../assets/mobileDesign.png';
 import { GlobalContext } from '../../context/global.context';
 import { IoArrowForward } from 'react-icons/io5';
 import { useLocation } from 'react-router-dom';
-import gray from '../../assets/gray.png';
 import { FaGithub } from 'react-icons/fa';
 import { FaYoutube } from 'react-icons/fa';
 import { FaLinkedin } from 'react-icons/fa';
@@ -37,31 +36,26 @@ const Mobile = () => {
       pos='relative'
     >
       <Image src={mobileDesign} h={{ base: 'auto', sm: '600px' }} />
-      <Box pos='absolute'>
+      <Box pos='absolute' width='75%'>
         {allData && (
           <Flex alignItems='center' flexDir='column'>
-            <Flex alignItems='center' flexDir='column'>
-              <Image
-                src={
-                  allData.profileData.image ? allData.profileData.image : gray
-                }
-                alt='Preview'
-                h='70px'
-                w='70px'
-                borderRadius='50%'
-                border={
-                  allData.profileData.image ? '4px solid #7750de' : 'none'
-                }
-              />
+            {allData.profileData.firstName ? (
+              <Flex alignItems='center' flexDir='column'>
+                <Image
+                  src={allData.profileData.image}
+                  alt='Preview'
+                  h='70px'
+                  w='70px'
+                  borderRadius='50%'
+                  border='4px solid'
+                  borderColor='linkSharing.purple.bg'
+                />
 
-              {allData.profileData.firstName ? (
                 <Tooltip
                   label={
-                    allData.profileData
-                      ? allData.profileData.firstName +
-                        ' ' +
-                        allData.profileData.lastName
-                      : ''
+                    allData.profileData.firstName +
+                    ' ' +
+                    allData.profileData.lastName
                   }
                   placement='right'
                 >
@@ -70,32 +64,18 @@ const Mobile = () => {
                     whiteSpace='nowrap'
                     textOverflow='ellipsis'
                     overflow='hidden'
-                    width={{ base: '140px', lg: '238px' }}
+                    width={{ base: '140px', md: '238px' }}
                     textAlign='center'
                   >
                     {allData.profileData.firstName}{' '}
                     {allData.profileData.lastName}
                   </Text>
                 </Tooltip>
-              ) : (
-                <Image
-                  src={gray}
-                  alt='Preview'
-                  h='16px'
-                  w='100px'
-                  mt='8px'
-                  borderRadius='8px'
-                />
-              )}
 
-              {allData.profileData.email ? (
-                <Tooltip
-                  label={allData.profileData ? allData.profileData.email : ''}
-                  placement='right'
-                >
+                <Tooltip label={allData.profileData.email} placement='right'>
                   <Text
-                    color='#737373'
-                    width={{ base: '140px', lg: '238px' }}
+                    color='linkSharing.textColor'
+                    width={{ base: '140px', md: '238px' }}
                     textAlign='center'
                     whiteSpace='nowrap'
                     textOverflow='ellipsis'
@@ -104,19 +84,38 @@ const Mobile = () => {
                     {allData.profileData.email}
                   </Text>
                 </Tooltip>
-              ) : (
-                <Image
-                  src={gray}
+              </Flex>
+            ) : (
+              <Flex alignItems='center' flexDir='column'>
+                <Box
+                  backgroundColor='linkSharing.gray.light'
+                  alt='Preview'
+                  h='70px'
+                  w='70px'
+                  borderRadius='50%'
+                />
+
+                <Box
+                  backgroundColor='linkSharing.gray.light'
+                  alt='Preview'
+                  h='16px'
+                  w='100px'
+                  mt='8px'
+                  borderRadius='8px'
+                />
+
+                <Box
+                  backgroundColor='linkSharing.gray.light'
                   alt='Preview'
                   h='16px'
                   w='50px'
                   mt='8px'
                   borderRadius='8px'
                 />
-              )}
-            </Flex>
+              </Flex>
+            )}
 
-            <Flex mt='24px' gap='12px' flexDir='column'>
+            <Flex mt='24px' gap='12px' flexDir='column' width='100%'>
               {newAllLinkData.map((item, index) => (
                 <Button
                   key={index}
@@ -124,7 +123,7 @@ const Mobile = () => {
                   onClick={() =>
                     window.open(item.link ? item.link : '', '_blank')
                   }
-                  width={{ base: '124px', sm: '220px' }}
+                  width='100%'
                   background={
                     item.media
                       ? item.media.toLowerCase().includes('git')
@@ -132,13 +131,11 @@ const Mobile = () => {
                         : item.media.toLowerCase().includes('you')
                         ? 'red'
                         : item.media.toLowerCase().includes('telegram')
-                        ? '#24A1DE'
-                        : '#3c5ef7'
-                      : '#eeeeee'
+                        ? 'linkSharing.telegram'
+                        : 'linkSharing.linkedIn'
+                      : 'linkSharing.gray.light'
                   }
-                  _hover={{
-                    backgroundColor: item.media ? '#000000a1' : '#eeeeee',
-                  }}
+                  _hover={{ opacity: '0.6' }}
                   h={{ base: '24px', md: '40px' }}
                   color='white'
                   variant='solid'
@@ -148,6 +145,7 @@ const Mobile = () => {
                       justifyContent='space-between'
                       alignItems='center'
                       width='100%'
+                      fontSize={{ base: '14px', sm: '16px' }}
                     >
                       <Flex alignItems='center' gap='8px'>
                         <Icon

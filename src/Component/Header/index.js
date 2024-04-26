@@ -88,14 +88,14 @@ const Header = () => {
     <>
       <Flex
         flexDir='column'
-        h='100vh'
+        h='calc(100vh - 100px)'
         width='100vw'
         pos='relative'
-        p={path ? '0px' : '24px 44px'}
+        p={path ? '0px' : { base: '24px', sm: '24px 44px' }}
       >
         {path ? (
           <Box
-            backgroundColor='#7750de'
+            backgroundColor='linkSharing.purple.bg'
             p='16px 16px 0 16px'
             h='50vh'
             borderBottomLeftRadius='40px'
@@ -109,15 +109,20 @@ const Header = () => {
               borderRadius='8px'
             >
               <NavLink to='/'>
-                <Button border='1px solid #7750de' color='#7750de'>
+                <Button
+                  border='1px solid'
+                  color='linkSharing.purple.bg'
+                  borderColor='linkSharing.purple.bg'
+                >
                   Back to Editor
                 </Button>
               </NavLink>
               <NavLink to='/'>
                 <Button
-                  border='1px solid #7750de'
+                  border='1px solid'
+                  borderColor='linkSharing.purple.bg'
                   color='white'
-                  bg='#7750de'
+                  bg='linkSharing.purple.bg'
                   _hover={{ color: 'white' }}
                   onClick={handleShare}
                 >
@@ -134,23 +139,30 @@ const Header = () => {
             p='8px'
             fontSize='20px'
           >
-            <Flex alignItems='center' gap='8px'>
-              <Icon as={CiLink} bg='#6511f6' color='white' borderRadius='4px' />
-              <Text
-                lineHeight='normal'
-                fontWeight='700'
-                display={{ base: 'none', sm: 'block' }}
-              >
-                devlinks
-              </Text>
-            </Flex>
+            <NavLink to='/'>
+              <Flex alignItems='center' gap='8px'>
+                <Icon
+                  as={CiLink}
+                  bg='linkSharing.purple.bg'
+                  color='white'
+                  borderRadius='4px'
+                />
+                <Text
+                  lineHeight='normal'
+                  fontWeight='700'
+                  display={{ base: 'none', sm: 'block' }}
+                >
+                  devlinks
+                </Text>
+              </Flex>
+            </NavLink>
             <Tabs onChange={handleTabsChange} index={tabIndex}>
-              <Flex gap='8px' color='#737373'>
+              <Flex gap='8px' color='linkSharing.textColor'>
                 <NavLink to='/'>
                   <Tab
                     _selected={{
-                      bg: '#efe9fe',
-                      color: '#7750de',
+                      bg: 'linkSharing.purple.light',
+                      color: 'linkSharing.purple.bg',
                       borderRadius: '6px',
                     }}
                   >
@@ -170,8 +182,8 @@ const Header = () => {
                 <NavLink to='/profile'>
                   <Tab
                     _selected={{
-                      bg: '#efe9fe',
-                      color: '#7750de',
+                      bg: 'linkSharing.purple.light',
+                      color: 'linkSharing.purple.bg',
                       borderRadius: '6px',
                     }}
                   >
@@ -192,7 +204,11 @@ const Header = () => {
 
             <Box>
               <NavLink to='/preview'>
-                <Button border='1px solid #7750de' color='#7750de'>
+                <Button
+                  border='1px solid'
+                  borderColor='linkSharing.purple.bg'
+                  color='linkSharing.purple.bg'
+                >
                   <Icon
                     as={AiOutlineEye}
                     display={{ base: 'block', sm: 'none' }}

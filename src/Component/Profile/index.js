@@ -84,7 +84,7 @@ const Profile = () => {
   };
 
   return (
-    <Box color='#737373' width={{ base: '100%', xl: '80%' }}>
+    <Box color='linkSharing.textColor' width={{ base: '100%', xl: '80%' }}>
       <Box
         height={{
           base: 'calc(100vh - 200px)',
@@ -146,13 +146,37 @@ const Profile = () => {
                   </Flex>
                 </Box>
               ) : (
-                <Button
-                  onClick={handleClick}
-                  colorScheme='blue'
-                  variant='outline'
+                <Box
+                  pos='relative'
+                  backgroundColor={show ? 'black' : 'auto'}
+                  borderRadius='8px'
                 >
-                  Upload Image
-                </Button>
+                  <Box
+                    backgroundColor='linkSharing.purple.light'
+                    h='160px'
+                    w='160px'
+                    onClick={handleClick}
+                    borderRadius='8px'
+                    cursor='pointer'
+                  />
+                  <Flex
+                    pos='absolute'
+                    top='50%'
+                    left='50%'
+                    style={{ transform: 'translate(-50%,-50%)' }}
+                    flexDir='column'
+                    alignItems='center'
+                    gap='12px'
+                    fontWeight='700'
+                    color='linkSharing.purple.bg'
+                    width='100%'
+                    cursor='pointer'
+                    onClick={handleClick}
+                  >
+                    <Icon as={IoImageOutline} fontSize='30px' />
+                    <Flex alignItems='center'>Upload image</Flex>
+                  </Flex>
+                </Box>
               )}
 
               <input
@@ -165,10 +189,16 @@ const Profile = () => {
                 style={{ display: 'none' }}
               />
 
-              <label htmlFor='file' style={{ fontSize: '14px' }}>
+              <Text
+                htmlFor='file'
+                style={{
+                  fontSize: '14px',
+                }}
+                width={{ base: '170px', sm: '250px', lg: '170px', xl: '250px' }}
+              >
                 Image must be below 1024*1024px. <br /> Use PNG JPG, or BMP
                 format.
-              </label>
+              </Text>
             </Flex>
           </Flex>
 
@@ -180,7 +210,7 @@ const Profile = () => {
             <Text minW='200px'>First name</Text>
             <Input
               type='text'
-              borderColor='#d0d5dd'
+              borderColor='linkSharing.gray.dark'
               placeholder='Enter first name'
               value={allProfileData.firstName}
               onChange={(e) =>
@@ -200,7 +230,7 @@ const Profile = () => {
             <Text minW='200px'>Last name</Text>
             <Input
               type='text'
-              borderColor='#d0d5dd'
+              borderColor='linkSharing.gray.dark'
               placeholder='Enter last name'
               value={allProfileData.lastName}
               onChange={(e) =>
@@ -220,7 +250,7 @@ const Profile = () => {
             <Text minW='200px'>Email</Text>
             <Input
               type='email'
-              borderColor='#d0d5dd'
+              borderColor='linkSharing.gray.dark'
               placeholder='Enter email'
               value={allProfileData.email}
               onChange={(e) =>
@@ -237,26 +267,29 @@ const Profile = () => {
       <Flex
         alignItems='center'
         justifyContent='end'
-        borderTop='1px solid #bbbbbb'
+        borderTop='1px solid'
+        borderColor='linkSharing.gray.dark'
         mt='8px'
         pt='8px'
         gap='8px'
       >
         <Button
-          border='1px solid #7750de'
+          border='1px solid'
+          borderColor='linkSharing.purple.bg'
           color='white'
-          bg='#7750de'
-          width='80px'
+          bg='linkSharing.purple.bg'
+          width={{ base: '50%', lg: '80px' }}
           _hover={{ opacity: '0.8' }}
           onClick={handleReset}
         >
           Reset
         </Button>
         <Button
-          border='1px solid #7750de'
+          border='1px solid'
+          borderColor='linkSharing.purple.bg'
           color='white'
-          bg='#7750de'
-          width='80px'
+          bg='linkSharing.purple.bg'
+          width={{ base: '50%', lg: '80px' }}
           _hover={{ opacity: '0.8' }}
           onClick={handleSave}
         >
